@@ -30,6 +30,7 @@ export default function RequestPage() {
   const [lat, setLat] = useState<number | null>(null);
   const [lng, setLng] = useState<number | null>(null);
   const [situation, setSituation] = useState("");
+  const [evacuationScope, setEvacuationScope] = useState("own");
   const [locating, setLocating] = useState(false);
 
   // Step 2 fields
@@ -111,6 +112,7 @@ export default function RequestPage() {
           lat,
           lng,
           situation: situation || null,
+          evacuationScope,
           trailerType,
           animals: animals.map((a) => ({
             species: a.species,
@@ -224,6 +226,41 @@ export default function RequestPage() {
               />
             </div>
 
+            <div>
+              <label className="block text-sm font-semibold text-gray-800 mb-2">
+                Who are you requesting evacuation for? *
+              </label>
+              <div className="space-y-2">
+                <label className="flex items-center gap-3 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="evacuationScope"
+                    value="own"
+                    checked={evacuationScope === "own"}
+                    onChange={(e) => setEvacuationScope(e.target.value)}
+                    className="w-4 h-4 accent-brand-green"
+                  />
+                  <span className="text-base text-gray-800">My animals only</span>
+                </label>
+                <label className="flex items-center gap-3 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="evacuationScope"
+                    value="all"
+                    checked={evacuationScope === "all"}
+                    onChange={(e) => setEvacuationScope(e.target.value)}
+                    className="w-4 h-4 accent-brand-green"
+                  />
+                  <span className="text-base text-gray-800">All animals at this property</span>
+                </label>
+                {evacuationScope === "all" && (
+                  <p className="text-xs text-gray-500 ml-7">
+                    If others at your property have already submitted a full request, duplicate requests may be flagged.
+                  </p>
+                )}
+              </div>
+            </div>
+
             <button
               onClick={goToStep2}
               className="w-full bg-brand-green text-white font-bold text-lg py-4 rounded-lg hover:bg-brand-green/90 active:bg-brand-green/80 transition-colors"
@@ -300,7 +337,7 @@ export default function RequestPage() {
                       updateAnimal(i, "specialNeeds", e.target.value)
                     }
                     className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-base focus:outline-none focus:ring-2 focus:ring-brand-green"
-                    placeholder="Injured, pregnant, aggressive, etc."
+                    placeholder="Stallion, warm blood size, difficult to load"
                   />
                 </div>
               </div>

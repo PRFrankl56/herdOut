@@ -12,7 +12,7 @@ const config: Config = {
         background: "var(--background)",
         foreground: "var(--foreground)",
         brand: {
-          green: "#1a4731",
+          green: "#1e1b4b",
           amber: "#f59e0b",
         },
       },

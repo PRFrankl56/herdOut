@@ -5,7 +5,7 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
 
-    const { name, phone, address, lat, lng, situation, trailerType, animals } =
+    const { name, phone, address, lat, lng, situation, evacuationScope, trailerType, animals } =
       body;
 
     if (!name || !phone || !address || !trailerType) {
@@ -30,6 +30,7 @@ export async function POST(req: NextRequest) {
         lat: lat ? parseFloat(lat) : null,
         lng: lng ? parseFloat(lng) : null,
         situation: situation || null,
+        evacuationScope: evacuationScope || "own",
         trailerType,
         animals: {
           create: animals.map(

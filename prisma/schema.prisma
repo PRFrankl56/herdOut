@@ -15,8 +15,9 @@ model Request {
   lat         Float?
   lng         Float?
   situation   String?
-  trailerType String
-  createdAt   DateTime @default(now())
+  evacuationScope String @default("own")
+  trailerType     String
+  createdAt       DateTime @default(now())
   animals     Animal[]
 }
 

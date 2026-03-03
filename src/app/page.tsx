@@ -34,7 +34,9 @@ export default async function Home() {
           <h2 className="text-white text-2xl font-bold">
             🔥 Active Wildfires
           </h2>
-          <span className="text-white/40 text-sm">Western US · Updated every 5min</span>
+          <Link href="/map" className="text-brand-amber text-sm font-semibold hover:underline">
+            View Map →
+          </Link>
         </div>
 
         {fires.length === 0 ? (

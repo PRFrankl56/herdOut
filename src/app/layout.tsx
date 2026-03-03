@@ -32,6 +32,7 @@ export default async function RootLayout({
             🖤 HerdOut
           </Link>
           <div className="flex items-center gap-4">
+            <Link href="/map" className="text-white/70 hover:text-white text-sm">🗺 Map</Link>
             {session?.user ? (
               <>
                 <Link href="/profile/animals" className="text-white/80 hover:text-white text-sm">My Animals</Link>

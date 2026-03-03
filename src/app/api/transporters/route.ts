@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { geocodeAddress } from "@/lib/geocode";
 
 export async function POST(req: NextRequest) {
   try {
@@ -33,13 +34,21 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Geocode the address if lat/lng not provided
+    let resolvedLat = lat ? parseFloat(lat) : null;
+    let resolvedLng = lng ? parseFloat(lng) : null;
+    if (!resolvedLat || !resolvedLng) {
+      const coords = await geocodeAddress(address);
+      if (coords) { resolvedLat = coords.lat; resolvedLng = coords.lng; }
+    }
+
     const transporter = await prisma.transporter.create({
       data: {
         name,
         phone,
         address,
-        lat: lat ? parseFloat(lat) : null,
-        lng: lng ? parseFloat(lng) : null,
+        lat: resolvedLat,
+        lng: resolvedLng,
         stallCount: parseInt(stallCount),
         rigLengthFt,
         trailerTypes: JSON.stringify(trailerTypes || []),

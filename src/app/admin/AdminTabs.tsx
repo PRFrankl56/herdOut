@@ -32,11 +32,8 @@ interface Transporter {
   stallCount: number;
   rigLengthFt: string;
   trailerTypes: string;
-  driveCapability: string;
   livestockTypes: string;
   maxDistance: string;
-  availableNow: boolean;
-  availableInHours: number | null;
   notes: string | null;
   createdAt: Date;
 }
@@ -199,22 +196,9 @@ export default function AdminTabs({
                         </h2>
                         <p className="text-sm text-gray-600">{t.phone}</p>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <span
-                          className={`text-xs font-semibold px-2 py-1 rounded-full ${
-                            t.availableNow
-                              ? "bg-green-100 text-green-800"
-                              : "bg-amber-100 text-amber-800"
-                          }`}
-                        >
-                          {t.availableNow
-                            ? "Available now"
-                            : `In ${t.availableInHours}hr${t.availableInHours !== 1 ? "s" : ""}`}
-                        </span>
-                        <span className="text-xs text-gray-400">
-                          {new Date(t.createdAt).toLocaleString()}
-                        </span>
-                      </div>
+                      <span className="text-xs text-gray-400">
+                        {new Date(t.createdAt).toLocaleString()}
+                      </span>
                     </div>
 
                     <div className="mb-3">
@@ -237,10 +221,6 @@ export default function AdminTabs({
                       <p className="text-gray-700">
                         <span className="font-semibold">Rig length:</span>{" "}
                         {RIG_LENGTH_LABELS[t.rigLengthFt] || t.rigLengthFt}
-                      </p>
-                      <p className="text-gray-700">
-                        <span className="font-semibold">Drive:</span>{" "}
-                        {t.driveCapability === "4wd" ? "4WD/AWD" : "2WD only"}
                       </p>
                       <p className="text-gray-700">
                         <span className="font-semibold">Max distance:</span>{" "}

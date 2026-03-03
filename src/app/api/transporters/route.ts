@@ -14,15 +14,12 @@ export async function POST(req: NextRequest) {
       stallCount,
       rigLengthFt,
       trailerTypes,
-      driveCapability,
       livestockTypes,
       maxDistance,
-      availableNow,
-      availableInHours,
       notes,
     } = body;
 
-    if (!name || !phone || !address || !rigLengthFt || !driveCapability || !maxDistance) {
+    if (!name || !phone || !address || !rigLengthFt || !maxDistance) {
       return NextResponse.json(
         { error: "Missing required fields" },
         { status: 400 }
@@ -46,11 +43,11 @@ export async function POST(req: NextRequest) {
         stallCount: parseInt(stallCount),
         rigLengthFt,
         trailerTypes: JSON.stringify(trailerTypes || []),
-        driveCapability,
+        driveCapability: "N/A",
         livestockTypes: JSON.stringify(livestockTypes || []),
         maxDistance,
-        availableNow: Boolean(availableNow),
-        availableInHours: availableInHours ? parseInt(availableInHours) : null,
+        availableNow: true,
+        availableInHours: null,
         notes: notes || null,
       },
     });

@@ -19,11 +19,6 @@ const TRAILER_TYPE_OPTIONS = [
   "Flatbed",
 ];
 
-const DRIVE_OPTIONS = [
-  { value: "2wd", label: "2WD only" },
-  { value: "4wd", label: "4WD / AWD" },
-];
-
 const LIVESTOCK_OPTIONS = [
   "Cattle",
   "Goats/Sheep",
@@ -36,13 +31,6 @@ const DISTANCE_OPTIONS = [
   { value: "25", label: "10-25 miles" },
   { value: "50", label: "25-50 miles" },
   { value: "50+", label: "50+ miles" },
-];
-
-const HOURS_OPTIONS = [
-  { value: "1", label: "1 hour" },
-  { value: "2", label: "2 hours" },
-  { value: "4", label: "4 hours" },
-  { value: "8", label: "8+ hours" },
 ];
 
 export default function TransportPage() {
@@ -62,13 +50,8 @@ export default function TransportPage() {
   const [stallCount, setStallCount] = useState(0);
   const [rigLengthFt, setRigLengthFt] = useState("20-30");
   const [trailerTypes, setTrailerTypes] = useState<string[]>([]);
-  const [driveCapability, setDriveCapability] = useState("4wd");
   const [livestockTypes, setLivestockTypes] = useState<string[]>([]);
   const [maxDistance, setMaxDistance] = useState("25");
-
-  // Availability
-  const [availableNow, setAvailableNow] = useState(true);
-  const [availableInHours, setAvailableInHours] = useState("2");
 
   // Notes
   const [notes, setNotes] = useState("");
@@ -131,11 +114,8 @@ export default function TransportPage() {
           stallCount,
           rigLengthFt,
           trailerTypes,
-          driveCapability,
           livestockTypes,
           maxDistance,
-          availableNow,
-          availableInHours: availableNow ? null : parseInt(availableInHours),
           notes: notes || null,
         }),
       });
@@ -289,26 +269,6 @@ export default function TransportPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-800 mb-1">
-                  Drive Capability *
-                </label>
-                <select
-                  value={driveCapability}
-                  onChange={(e) => setDriveCapability(e.target.value)}
-                  className="w-full border border-gray-300 rounded-lg px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-brand-green"
-                >
-                  {DRIVE_OPTIONS.map((o) => (
-                    <option key={o.value} value={o.value}>
-                      {o.label}
-                    </option>
-                  ))}
-                </select>
-                <p className="text-xs text-gray-500 mt-1">
-                  Critical for rough ranch driveways
-                </p>
-              </div>
-
-              <div>
                 <label className="block text-sm font-semibold text-gray-800 mb-2">
                   Can haul other livestock besides horses?
                 </label>
@@ -348,43 +308,6 @@ export default function TransportPage() {
                   ))}
                 </select>
               </div>
-            </div>
-          </section>
-
-          {/* Availability */}
-          <section>
-            <h2 className="text-lg font-bold text-gray-900 mb-4">Availability</h2>
-            <div className="space-y-5">
-              <label className="flex items-center gap-3 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={availableNow}
-                  onChange={(e) => setAvailableNow(e.target.checked)}
-                  className="w-5 h-5 rounded border-gray-300 text-brand-green focus:ring-brand-green"
-                />
-                <span className="text-sm font-semibold text-gray-800">
-                  Available now
-                </span>
-              </label>
-
-              {!availableNow && (
-                <div>
-                  <label className="block text-sm font-semibold text-gray-800 mb-1">
-                    Available in how many hours?
-                  </label>
-                  <select
-                    value={availableInHours}
-                    onChange={(e) => setAvailableInHours(e.target.value)}
-                    className="w-full border border-gray-300 rounded-lg px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-brand-green"
-                  >
-                    {HOURS_OPTIONS.map((o) => (
-                      <option key={o.value} value={o.value}>
-                        {o.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              )}
             </div>
           </section>
 

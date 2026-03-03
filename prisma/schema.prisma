@@ -17,8 +17,10 @@ model Request {
   situation   String?
   evacuationScope String @default("own")
   trailerType     String
+  status          String @default("unmatched") // unmatched, queued, matched, confirmed, completed
   createdAt       DateTime @default(now())
   animals     Animal[]
+  matches     Match[]
 }
 
 model Animal {
@@ -45,6 +47,20 @@ model Transporter {
   maxDistance      String
   availableNow    Boolean
   availableInHours Int?
+  availability    String   @default("available") // available, in_progress
   notes           String?
   createdAt       DateTime @default(now())
+  matches         Match[]
+}
+
+model Match {
+  id            String    @id @default(cuid())
+  requestId     String
+  transporterId String
+  status        String    @default("pending") // pending, accepted, rejected, completed, cancelled
+  notifiedAt    DateTime?
+  respondedAt   DateTime?
+  createdAt     DateTime  @default(now())
+  request       Request      @relation(fields: [requestId], references: [id])
+  transporter   Transporter  @relation(fields: [transporterId], references: [id])
 }

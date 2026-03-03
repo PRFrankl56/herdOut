@@ -6,11 +6,19 @@ export const dynamic = "force-dynamic";
 
 export default async function AdminPage() {
   const requests = await prisma.request.findMany({
-    include: { animals: true },
+    include: { animals: true, matches: { include: { transporter: true } } },
     orderBy: { createdAt: "desc" },
   });
 
   const transporters = await prisma.transporter.findMany({
+    orderBy: { createdAt: "desc" },
+  });
+
+  const matches = await prisma.match.findMany({
+    include: {
+      request: { include: { animals: true } },
+      transporter: true,
+    },
     orderBy: { createdAt: "desc" },
   });
 
@@ -29,7 +37,11 @@ export default async function AdminPage() {
           </Link>
         </div>
 
-        <AdminTabs requests={requests} transporters={transporters} />
+        <AdminTabs
+          requests={requests}
+          transporters={transporters}
+          matches={matches}
+        />
       </div>
     </main>
   );

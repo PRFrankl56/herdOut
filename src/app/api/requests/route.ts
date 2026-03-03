@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { matchRequest } from "@/lib/matching";
 
 export async function POST(req: NextRequest) {
   try {
@@ -44,6 +45,11 @@ export async function POST(req: NextRequest) {
       },
       include: { animals: true },
     });
+
+    // Auto-trigger matching after creation
+    matchRequest(request.id).catch((err) =>
+      console.error("Auto-matching failed:", err)
+    );
 
     return NextResponse.json(request, { status: 201 });
   } catch (error) {

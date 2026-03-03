@@ -9,20 +9,7 @@ interface Animal {
   specialNeeds: string | null;
 }
 
-interface Request {
-  id: string;
-  name: string;
-  phone: string;
-  address: string;
-  lat: number | null;
-  lng: number | null;
-  situation: string | null;
-  trailerType: string;
-  createdAt: Date;
-  animals: Animal[];
-}
-
-interface Transporter {
+interface TransporterBase {
   id: string;
   name: string;
   phone: string;
@@ -34,8 +21,54 @@ interface Transporter {
   trailerTypes: string;
   livestockTypes: string;
   maxDistance: string;
+  availability: string;
   notes: string | null;
   createdAt: Date;
+}
+
+interface MatchBase {
+  id: string;
+  status: string;
+  transporter: TransporterBase;
+}
+
+interface Request {
+  id: string;
+  name: string;
+  phone: string;
+  address: string;
+  lat: number | null;
+  lng: number | null;
+  situation: string | null;
+  trailerType: string;
+  status: string;
+  createdAt: Date;
+  animals: Animal[];
+  matches: MatchBase[];
+}
+
+interface Match {
+  id: string;
+  requestId: string;
+  transporterId: string;
+  status: string;
+  notifiedAt: Date | null;
+  respondedAt: Date | null;
+  createdAt: Date;
+  request: {
+    id: string;
+    name: string;
+    phone: string;
+    address: string;
+    status: string;
+    animals: Animal[];
+  };
+  transporter: {
+    id: string;
+    name: string;
+    phone: string;
+    availability: string;
+  };
 }
 
 const DISTANCE_LABELS: Record<string, string> = {
@@ -52,14 +85,39 @@ const RIG_LENGTH_LABELS: Record<string, string> = {
   "over-40": "Over 40ft",
 };
 
+const STATUS_STYLES: Record<string, string> = {
+  unmatched: "bg-gray-100 text-gray-700",
+  queued: "bg-yellow-100 text-yellow-800",
+  matched: "bg-blue-100 text-blue-800",
+  confirmed: "bg-green-100 text-green-800",
+  completed: "bg-purple-100 text-purple-800",
+};
+
+const MATCH_STATUS_STYLES: Record<string, string> = {
+  pending: "bg-yellow-100 text-yellow-800",
+  accepted: "bg-green-100 text-green-800",
+  rejected: "bg-red-100 text-red-800",
+  completed: "bg-purple-100 text-purple-800",
+  cancelled: "bg-gray-100 text-gray-700",
+};
+
+const AVAILABILITY_STYLES: Record<string, string> = {
+  available: "bg-green-100 text-green-800",
+  in_progress: "bg-orange-100 text-orange-800",
+};
+
 export default function AdminTabs({
   requests,
   transporters,
+  matches,
 }: {
   requests: Request[];
-  transporters: Transporter[];
+  transporters: TransporterBase[];
+  matches: Match[];
 }) {
-  const [tab, setTab] = useState<"requests" | "transporters">("requests");
+  const [tab, setTab] = useState<"requests" | "transporters" | "matches">(
+    "requests"
+  );
 
   return (
     <>
@@ -72,7 +130,7 @@ export default function AdminTabs({
               : "bg-white border border-gray-200 text-gray-700 hover:bg-gray-50"
           }`}
         >
-          Evacuation Requests ({requests.length})
+          Requests ({requests.length})
         </button>
         <button
           onClick={() => setTab("transporters")}
@@ -83,6 +141,16 @@ export default function AdminTabs({
           }`}
         >
           Transporters ({transporters.length})
+        </button>
+        <button
+          onClick={() => setTab("matches")}
+          className={`px-4 py-2 rounded-lg font-semibold text-sm transition-colors ${
+            tab === "matches"
+              ? "bg-brand-green text-white"
+              : "bg-white border border-gray-200 text-gray-700 hover:bg-gray-50"
+          }`}
+        >
+          Matches ({matches.length})
         </button>
       </div>
 
@@ -106,9 +174,18 @@ export default function AdminTabs({
                       </h2>
                       <p className="text-sm text-gray-600">{req.phone}</p>
                     </div>
-                    <span className="text-xs text-gray-400">
-                      {new Date(req.createdAt).toLocaleString()}
-                    </span>
+                    <div className="flex items-center gap-2">
+                      <span
+                        className={`text-xs font-semibold px-2 py-1 rounded-full ${
+                          STATUS_STYLES[req.status] || STATUS_STYLES.unmatched
+                        }`}
+                      >
+                        {req.status}
+                      </span>
+                      <span className="text-xs text-gray-400">
+                        {new Date(req.createdAt).toLocaleString()}
+                      </span>
+                    </div>
                   </div>
 
                   <div className="mb-3">
@@ -159,6 +236,32 @@ export default function AdminTabs({
                     <span className="font-semibold">Trailer needed:</span>{" "}
                     {req.trailerType}
                   </p>
+
+                  {req.matches.length > 0 && (
+                    <div className="mt-3 pt-3 border-t border-gray-100">
+                      <p className="text-sm font-semibold text-gray-700 mb-1">
+                        Matched transporter:
+                      </p>
+                      {req.matches
+                        .filter((m) => m.status !== "rejected")
+                        .map((m) => (
+                          <div
+                            key={m.id}
+                            className="text-sm text-gray-600 flex items-center gap-2"
+                          >
+                            <span>{m.transporter.name}</span>
+                            <span
+                              className={`text-xs font-semibold px-2 py-0.5 rounded-full ${
+                                MATCH_STATUS_STYLES[m.status] ||
+                                MATCH_STATUS_STYLES.pending
+                              }`}
+                            >
+                              {m.status}
+                            </span>
+                          </div>
+                        ))}
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
@@ -196,9 +299,21 @@ export default function AdminTabs({
                         </h2>
                         <p className="text-sm text-gray-600">{t.phone}</p>
                       </div>
-                      <span className="text-xs text-gray-400">
-                        {new Date(t.createdAt).toLocaleString()}
-                      </span>
+                      <div className="flex items-center gap-2">
+                        <span
+                          className={`text-xs font-semibold px-2 py-1 rounded-full ${
+                            AVAILABILITY_STYLES[t.availability] ||
+                            AVAILABILITY_STYLES.available
+                          }`}
+                        >
+                          {t.availability === "in_progress"
+                            ? "In Progress"
+                            : "Available"}
+                        </span>
+                        <span className="text-xs text-gray-400">
+                          {new Date(t.createdAt).toLocaleString()}
+                        </span>
+                      </div>
                     </div>
 
                     <div className="mb-3">
@@ -269,6 +384,86 @@ export default function AdminTabs({
                         <span className="font-semibold">Notes:</span> {t.notes}
                       </p>
                     )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </>
+      )}
+
+      {tab === "matches" && (
+        <>
+          {matches.length === 0 ? (
+            <div className="bg-white rounded-lg border border-gray-200 p-8 text-center text-gray-500">
+              No matches yet.
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {matches.map((m) => {
+                const totalAnimals = m.request.animals.reduce(
+                  (sum, a) => sum + a.count,
+                  0
+                );
+                return (
+                  <div
+                    key={m.id}
+                    className="bg-white rounded-lg border border-gray-200 p-5"
+                  >
+                    <div className="flex items-start justify-between mb-3">
+                      <div>
+                        <h2 className="font-bold text-lg text-gray-900">
+                          Match
+                        </h2>
+                        <p className="text-xs text-gray-400 font-mono">
+                          {m.id}
+                        </p>
+                      </div>
+                      <span
+                        className={`text-xs font-semibold px-2 py-1 rounded-full ${
+                          MATCH_STATUS_STYLES[m.status] ||
+                          MATCH_STATUS_STYLES.pending
+                        }`}
+                      >
+                        {m.status}
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4 text-sm">
+                      <div>
+                        <p className="font-semibold text-gray-700 mb-1">
+                          Requester
+                        </p>
+                        <p className="text-gray-600">{m.request.name}</p>
+                        <p className="text-gray-500 text-xs">
+                          {m.request.phone}
+                        </p>
+                        <p className="text-gray-500 text-xs">
+                          {totalAnimals} animal{totalAnimals !== 1 ? "s" : ""}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="font-semibold text-gray-700 mb-1">
+                          Transporter
+                        </p>
+                        <p className="text-gray-600">{m.transporter.name}</p>
+                        <p className="text-gray-500 text-xs">
+                          {m.transporter.phone}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="mt-3 pt-3 border-t border-gray-100 flex items-center justify-between text-xs text-gray-400">
+                      <span>
+                        Created: {new Date(m.createdAt).toLocaleString()}
+                      </span>
+                      {m.respondedAt && (
+                        <span>
+                          Responded:{" "}
+                          {new Date(m.respondedAt).toLocaleString()}
+                        </span>
+                      )}
+                    </div>
                   </div>
                 );
               })}

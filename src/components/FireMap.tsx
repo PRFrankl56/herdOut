@@ -44,6 +44,12 @@ export default function FireMap({ fires, requests, transporters }: Props) {
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
 
+    // Load Leaflet CSS dynamically (avoids webpack conflict)
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
+    document.head.appendChild(link);
+
     // Dynamically import Leaflet only on the client
     import("leaflet").then((L) => {
       const Lx = L.default;

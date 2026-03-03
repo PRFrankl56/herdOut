@@ -26,14 +26,6 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <head>
-        <link
-          rel="stylesheet"
-          href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-          crossOrigin=""
-        />
-      </head>
       <body className={`${geistSans.variable} font-sans antialiased`}>
         <nav className="bg-black/20 px-4 py-3 flex items-center justify-between">
           <Link href="/" className="text-white font-extrabold text-xl tracking-tight">

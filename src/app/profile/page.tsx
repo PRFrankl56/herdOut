@@ -1,10 +1,11 @@
 import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import SignOutButton from "./SignOutButton";
 
 export default async function ProfilePage() {
-  const session = await getServerSession();
+  const session = await getServerSession(authOptions);
   if (!session?.user) redirect("/login");
 
   return (

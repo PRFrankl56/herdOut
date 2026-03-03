@@ -1,10 +1,11 @@
 import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 
 export default async function AnimalsPage() {
-  const session = await getServerSession();
+  const session = await getServerSession(authOptions);
   if (!session?.user?.email) redirect("/login");
 
   const user = await prisma.user.findUnique({ where: { email: session.user.email } });

@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import Link from "next/link";
 import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 import NavSignOut from "./NavSignOut";
 
 const geistSans = localFont({
@@ -22,7 +23,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await getServerSession();
+  const session = await getServerSession(authOptions);
 
   return (
     <html lang="en">

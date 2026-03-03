@@ -1,7 +1,7 @@
-import { Match, Request, Transporter, Animal } from "@prisma/client";
+import { Match, Request, Transporter, RequestAnimal } from "@prisma/client";
 
 export type MatchWithRelations = Match & {
-  request: Request & { animals: Animal[] };
+  request: Request & { animals: RequestAnimal[] };
   transporter: Transporter;
 };
 

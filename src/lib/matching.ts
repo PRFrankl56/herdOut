@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { notifyTransporter, notifyRequester, MatchWithRelations } from "@/lib/notifications";
+import { notifyTransporter, MatchWithRelations } from "@/lib/notifications";
 
 function haversineDistance(
   lat1: number,

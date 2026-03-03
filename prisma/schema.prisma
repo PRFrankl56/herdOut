@@ -28,3 +28,22 @@ model Animal {
   request      Request @relation(fields: [requestId], references: [id])
   requestId    String
 }
+
+model Transporter {
+  id              String   @id @default(cuid())
+  name            String
+  phone           String
+  address         String
+  lat             Float?
+  lng             Float?
+  stallCount      Int
+  rigLengthFt     String
+  trailerTypes    String
+  driveCapability String
+  livestockTypes  String
+  maxDistance      String
+  availableNow    Boolean
+  availableInHours Int?
+  notes           String?
+  createdAt       DateTime @default(now())
+}

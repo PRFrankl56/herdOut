@@ -12,12 +12,20 @@ export default function Home() {
           Wildfire threatening your property? We connect you with volunteers who
           have trailers and can help move your animals to safety.
         </p>
-        <Link
-          href="/request"
-          className="inline-block bg-brand-amber text-brand-green font-bold text-lg px-8 py-5 rounded-lg shadow-lg hover:bg-amber-400 active:bg-amber-500 transition-colors"
-        >
-          I Need Help Evacuating My Animals
-        </Link>
+        <div className="flex flex-col gap-4">
+          <Link
+            href="/request"
+            className="inline-block bg-brand-amber text-brand-green font-bold text-lg px-8 py-5 rounded-lg shadow-lg hover:bg-amber-400 active:bg-amber-500 transition-colors"
+          >
+            I Need Help Evacuating My Animals
+          </Link>
+          <Link
+            href="/transport"
+            className="inline-block bg-white text-brand-green font-bold text-lg px-8 py-5 rounded-lg shadow-lg hover:bg-gray-100 active:bg-gray-200 transition-colors"
+          >
+            I Can Help Transport Animals
+          </Link>
+        </div>
         <div className="mt-12">
           <Link
             href="/admin"

@@ -41,18 +41,27 @@ function parseState(text: string): string {
 }
 
 function parseContainment(text: string): number | null {
-  // Try various patterns: "35% contained", "35 percent contained", "Percent Contained: 35"
-  const patterns = [
-    /(\d+)%\s*contained/i,
-    /(\d+)\s*percent\s*contained/i,
-    /percent\s*contained[:\s]+(\d+)/i,
-    /containment[:\s]+(\d+)%/i,
-  ];
-  for (const pattern of patterns) {
-    const match = text.match(pattern);
-    if (match) {
-      const val = parseInt(match[1]);
-      if (val >= 0 && val <= 100) return val;
+  // Split into sentences to check context
+  const sentences = text.split(/[.!?\n]/);
+
+  // Future-tense words that indicate a prediction, not current status
+  const futureTense = /anticipated|expected|projected|anticipate|expect|will be|by end of day|by tonight|by tomorrow/i;
+
+  for (const sentence of sentences) {
+    if (futureTense.test(sentence)) continue; // skip prediction sentences
+
+    const patterns = [
+      /(\d+)%\s*contained/i,
+      /(\d+)\s*percent\s*contained/i,
+      /percent\s*contained[:\s]+(\d+)/i,
+      /containment[:\s]+(\d+)%/i,
+    ];
+    for (const pattern of patterns) {
+      const match = sentence.match(pattern);
+      if (match) {
+        const val = parseInt(match[1]);
+        if (val >= 0 && val <= 100) return val;
+      }
     }
   }
   return null;

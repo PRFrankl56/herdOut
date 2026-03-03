@@ -13,7 +13,7 @@ const handler = NextAuth({
       from: process.env.EMAIL_FROM,
       sendVerificationRequest: async ({ identifier: email, url }) => {
         await resend.emails.send({
-          from: "HerdOut <RookF567@gmail.com>",
+          from: "HerdOut <onboarding@resend.dev>",
           to: email,
           subject: "Sign in to HerdOut",
           html: `

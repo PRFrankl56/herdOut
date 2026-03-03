@@ -1,0 +1,30 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Request {
+  id          String   @id @default(cuid())
+  name        String
+  phone       String
+  address     String
+  lat         Float?
+  lng         Float?
+  situation   String?
+  trailerType String
+  createdAt   DateTime @default(now())
+  animals     Animal[]
+}
+
+model Animal {
+  id           String  @id @default(cuid())
+  species      String
+  count        Int
+  specialNeeds String?
+  request      Request @relation(fields: [requestId], references: [id])
+  requestId    String
+}

@@ -3,7 +3,18 @@
 import { useEffect } from "react";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import L from "leaflet";
+
+// Must import Leaflet CSS at app level; import here as fallback
 import "leaflet/dist/leaflet.css";
+
+// Fix broken default icon URLs in webpack/Next.js builds
+// @ts-expect-error _getIconUrl exists at runtime
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
+  iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
+  shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+});
 
 // Fix Leaflet default icon paths in Next.js
 const fixIcon = (emoji: string, size = 32) =>

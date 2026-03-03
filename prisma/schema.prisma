@@ -151,3 +151,13 @@ model Match {
   transporter   Transporter  @relation(fields: [transporterId], references: [id])
 }
 
+
+model FireSnapshot {
+  id            String   @id @default(cuid())
+  incidentId    String
+  title         String
+  containmentPct Int?
+  cachedAt      DateTime @default(now())
+
+  @@index([incidentId, cachedAt])
+}

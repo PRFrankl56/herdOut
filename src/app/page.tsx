@@ -57,13 +57,31 @@ export default async function Home() {
                   <div className="flex-1 min-w-0">
                     <h3 className="text-white font-semibold text-base leading-snug">{fire.title}</h3>
                     <p className="text-white/50 text-sm mt-1">{fire.state}</p>
+                    {fire.updated && (
+                      <p className="text-white/30 text-xs mt-1">Updated {fire.updated}</p>
+                    )}
                   </div>
-                  <div className="text-right flex-shrink-0">
+                  <div className="text-right flex-shrink-0 space-y-1">
                     <span className="inline-block bg-red-500/20 text-red-300 text-xs font-bold px-2 py-1 rounded-full">
                       ACTIVE
                     </span>
-                    {fire.updated && (
-                      <p className="text-white/30 text-xs mt-1">Updated {fire.updated}</p>
+                    {fire.containmentPct !== null && (
+                      <div>
+                        <span className="inline-block bg-white/10 text-white text-xs font-bold px-2 py-1 rounded-full">
+                          {fire.containmentPct}% contained
+                        </span>
+                      </div>
+                    )}
+                    {fire.containmentDelta !== null && fire.containmentDelta !== 0 && (
+                      <div>
+                        <span className={`inline-block text-xs font-bold px-2 py-1 rounded-full ${
+                          fire.containmentDelta > 0
+                            ? "bg-green-500/20 text-green-300"
+                            : "bg-red-500/20 text-red-300"
+                        }`}>
+                          {fire.containmentDelta > 0 ? "+" : ""}{fire.containmentDelta}% (24h)
+                        </span>
+                      </div>
                     )}
                   </div>
                 </div>

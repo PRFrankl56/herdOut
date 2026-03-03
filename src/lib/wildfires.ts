@@ -122,6 +122,7 @@ export async function fetchWildfires(): Promise<Incident[]> {
 
       if (!type.toLowerCase().includes("wildfire")) continue;
       if (!WESTERN_STATES.some(s => state.toLowerCase().includes(s.toLowerCase()))) continue;
+      if (containmentPct === 100) continue; // fully contained — skip
 
       // Calculate delta vs 24h ago
       let containmentDelta: number | null = null;

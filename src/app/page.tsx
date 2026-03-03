@@ -65,7 +65,7 @@ export default async function Home() {
                     <span className="inline-block bg-red-500/20 text-red-300 text-xs font-bold px-2 py-1 rounded-full">
                       ACTIVE
                     </span>
-                    {fire.containmentPct !== null && (
+                    {fire.containmentPct !== null && fire.containmentPct < 100 && (
                       <div>
                         <span className="inline-block bg-white/10 text-white text-xs font-bold px-2 py-1 rounded-full">
                           {fire.containmentPct}% contained

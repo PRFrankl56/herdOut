@@ -121,6 +121,7 @@ export default function RequestForm({ profile, savedAnimals }: Props) {
       });
       if (!res.ok) throw new Error((await res.json()).error || "Failed");
       const data = await res.json();
+      localStorage.setItem("herdout_active_request", data.id);
       router.push(`/request/${data.id}`);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");

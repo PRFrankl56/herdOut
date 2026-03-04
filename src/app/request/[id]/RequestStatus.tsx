@@ -30,6 +30,7 @@ export default function RequestStatus({ request }: { request: Request }) {
   async function handleCancel() {
     setCancelling(true);
     await fetch(`/api/requests/${request.id}`, { method: "DELETE" });
+    localStorage.removeItem("herdout_active_request");
     router.push("/");
   }
 

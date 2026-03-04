@@ -5,6 +5,7 @@ import Link from "next/link";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import NavSignOut from "./NavSignOut";
+import ActiveRequestBanner from "@/components/ActiveRequestBanner";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -75,6 +76,7 @@ export default async function RootLayout({
             )}
           </div>
         </nav>
+        <ActiveRequestBanner />
         {children}
       </body>
     </html>

@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { matchRequest } from "@/lib/matching";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 
 export async function POST(req: NextRequest) {
   try {
@@ -23,6 +25,14 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Link to user if logged in
+    const session = await getServerSession(authOptions);
+    let userId: string | undefined;
+    if (session?.user?.email) {
+      const user = await prisma.user.findUnique({ where: { email: session.user.email } });
+      if (user) userId = user.id;
+    }
+
     const request = await prisma.request.create({
       data: {
         name,
@@ -33,6 +43,7 @@ export async function POST(req: NextRequest) {
         situation: situation || null,
         evacuationScope: evacuationScope || "own",
         trailerType,
+        userId,
         animals: {
           create: animals.map(
             (a: { species: string; count: number; specialNeeds?: string }) => ({

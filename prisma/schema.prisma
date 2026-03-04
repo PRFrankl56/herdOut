@@ -24,6 +24,7 @@ model User {
   animals       Animal[]
   transporterProfile TransporterProfile?
   transporter   Transporter?
+  requests      Request[]
 }
 
 model Account {
@@ -97,6 +98,7 @@ model TransporterProfile {
 
 model Request {
   id              String   @id @default(cuid())
+  userId          String?
   name            String
   phone           String
   address         String
@@ -105,10 +107,11 @@ model Request {
   situation       String?
   evacuationScope String   @default("own")
   trailerType     String
-  status          String   @default("unmatched") // unmatched, queued, matched, confirmed, completed
+  status          String   @default("unmatched") // unmatched, queued, matched, confirmed, completed, cancelled
   createdAt       DateTime @default(now())
   animals         RequestAnimal[]
   matches         Match[]
+  user            User?    @relation(fields: [userId], references: [id])
 }
 
 model RequestAnimal {

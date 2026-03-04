@@ -12,7 +12,15 @@ export default async function ProfilePage() {
 
   const user = await prisma.user.findUnique({
     where: { email: session.user.email },
-    include: { animals: true, transporter: true },
+    include: {
+      animals: true,
+      transporter: true,
+      requests: {
+        where: { status: { notIn: ["completed", "cancelled"] } },
+        orderBy: { createdAt: "desc" },
+        take: 1,
+      },
+    },
   });
 
   if (!user) redirect("/login");
@@ -84,10 +92,24 @@ export default async function ProfilePage() {
           )}
         </div>
 
-        {/* Emergency CTA */}
-        <Link href="/request" className="block bg-brand-amber text-brand-green font-bold text-center text-lg py-4 rounded-xl hover:bg-amber-400 transition-colors">
-          🚨 Request Emergency Evacuation
-        </Link>
+        {/* Active request or CTA */}
+        {user.requests[0] ? (
+          <Link href={`/request/${user.requests[0].id}`}
+            className="block bg-brand-amber/20 border-2 border-brand-amber text-white rounded-xl p-5 hover:bg-brand-amber/30 transition-colors">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-brand-amber font-bold text-sm uppercase tracking-wide">Active Request</p>
+                <p className="text-white font-semibold mt-1">{user.requests[0].address}</p>
+                <p className="text-white/50 text-xs mt-0.5 capitalize">{user.requests[0].status.replace("_", " ")}</p>
+              </div>
+              <span className="text-brand-amber text-2xl">→</span>
+            </div>
+          </Link>
+        ) : (
+          <Link href="/request" className="block bg-brand-amber text-brand-green font-bold text-center text-lg py-4 rounded-xl hover:bg-amber-400 transition-colors">
+            🚨 Request Emergency Evacuation
+          </Link>
+        )}
       </div>
     </main>
   );

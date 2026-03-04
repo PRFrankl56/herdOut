@@ -34,15 +34,15 @@ export default async function RootLayout({
         <nav className="bg-[#151330] border-b border-white/10 px-4 h-14 flex items-center justify-between sticky top-0 z-50">
           {/* Logo — H with arrow mark */}
           <Link href="/" aria-label="HerdOut home">
-            <svg viewBox="0 0 48 30" height="28" fill="#f59e0b" xmlns="http://www.w3.org/2000/svg">
+            <svg viewBox="0 0 52 30" height="28" xmlns="http://www.w3.org/2000/svg">
               {/* Left vertical bar */}
-              <rect x="0" y="0" width="8" height="30" rx="1" />
+              <rect x="0" y="0" width="8" height="30" rx="1" fill="#f59e0b" />
               {/* Right vertical bar */}
-              <rect x="18" y="0" width="8" height="30" rx="1" />
-              {/* Crossbar — connects both bars */}
-              <rect x="8" y="11" width="18" height="8" />
-              {/* Arrowhead — gap of 4px after right bar, slender */}
-              <polygon points="30,10 46,15 30,20" />
+              <rect x="18" y="0" width="8" height="30" rx="1" fill="#f59e0b" />
+              {/* Shaft — crossbar runs through both bars and extends past right bar */}
+              <rect x="8" y="12" width="22" height="6" fill="#f59e0b" />
+              {/* Chevron arrowhead — open ">" same stroke weight as shaft */}
+              <path d="M 30 8 L 44 15 L 30 22" stroke="#f59e0b" strokeWidth="6" fill="none" strokeLinejoin="miter" strokeLinecap="square" />
             </svg>
           </Link>
 

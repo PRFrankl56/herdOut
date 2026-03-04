@@ -7,6 +7,7 @@ import { authOptions } from "@/lib/auth";
 import NavSignOut from "./NavSignOut";
 import ActiveRequestBanner from "@/components/ActiveRequestBanner";
 import SupportModal from "@/components/SupportModal";
+import PushSubscriber from "@/components/PushSubscriber";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -88,6 +89,7 @@ export default async function RootLayout({
             )}
           </div>
         </nav>
+        {session?.user && <PushSubscriber />}
         {children}
       </body>
     </html>

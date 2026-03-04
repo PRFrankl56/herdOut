@@ -1,38 +1,54 @@
 import { Match, Request, Transporter, RequestAnimal } from "@prisma/client";
+import { sendPushToUser } from "./push";
 
 export type MatchWithRelations = Match & {
   request: Request & { animals: RequestAnimal[] };
   transporter: Transporter;
 };
 
-// TODO: Replace with Twilio SMS
 export async function notifyTransporter(match: MatchWithRelations): Promise<void> {
   const { request, transporter } = match;
   const totalAnimals = request.animals.reduce((sum, a) => sum + a.count, 0);
 
-  console.log("=== TRANSPORTER NOTIFICATION ===");
-  console.log(`To: ${transporter.name} (${transporter.phone})`);
-  console.log(`Match ID: ${match.id}`);
-  console.log(`Request from: ${request.name} at ${request.address}`);
-  console.log(`Animals: ${totalAnimals} total`);
-  console.log(`Trailer needed: ${request.trailerType}`);
-  console.log(`Respond at: /respond/${match.id}`);
-  console.log("================================");
+  // Push notification to transporter
+  if (transporter.userId) {
+    await sendPushToUser(transporter.userId, {
+      title: "🚛 New Evacuation Request",
+      body: `${totalAnimals} animal${totalAnimals !== 1 ? "s" : ""} near ${request.address} need transport`,
+      url: `/respond/${match.id}`,
+    });
+  }
+
+  // TODO: Twilio SMS fallback
+  console.log(`[notify] Transporter ${transporter.name} → match ${match.id}`);
 }
 
-// TODO: Replace with Twilio SMS
 export async function notifyRequester(match: MatchWithRelations, status: string): Promise<void> {
   const { request, transporter } = match;
 
-  console.log("=== REQUESTER NOTIFICATION ===");
-  console.log(`To: ${request.name} (${request.phone})`);
-  console.log(`Match ID: ${match.id}`);
-  console.log(`Status: ${status}`);
-  if (status === "confirmed") {
-    console.log(`Transporter: ${transporter.name} (${transporter.phone})`);
-    console.log(`Stalls: ${transporter.stallCount}`);
-  } else if (status === "queued") {
-    console.log("No transporter currently available. You are in the queue.");
+  // Push notification to requester
+  if (request.userId) {
+    if (status === "confirmed") {
+      await sendPushToUser(request.userId, {
+        title: "✅ Transporter Found!",
+        body: `${transporter.name} is on the way to help with your animals`,
+        url: `/request/${request.id}`,
+      });
+    } else if (status === "queued") {
+      await sendPushToUser(request.userId, {
+        title: "🔍 Looking for a Transporter",
+        body: "Your request is in the queue — we'll notify you as soon as someone is matched",
+        url: `/request/${request.id}`,
+      });
+    } else if (status === "declined") {
+      await sendPushToUser(request.userId, {
+        title: "Finding another transporter...",
+        body: "Your previous match declined — we're searching for another transporter",
+        url: `/request/${request.id}`,
+      });
+    }
   }
-  console.log("===============================");
+
+  // TODO: Twilio SMS fallback
+  console.log(`[notify] Requester ${request.name} → status ${status}`);
 }

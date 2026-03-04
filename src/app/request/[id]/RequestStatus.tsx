@@ -53,14 +53,52 @@ export default function RequestStatus({ request }: { request: Request }) {
             <span className="font-bold text-lg">{status.label}</span>
           </div>
           <p className="text-sm opacity-80">{status.description}</p>
-          {(request.status === "unmatched" || request.status === "queued") && (
-            <div className="mt-3 flex gap-1">
+        </div>
+
+        {/* Radar animation for searching state */}
+        {(request.status === "unmatched" || request.status === "queued") && (
+          <div className="bg-white/5 rounded-xl p-6 flex flex-col items-center">
+            <div className="relative w-48 h-48 mb-4">
+              {/* Pulsing rings */}
               {[0,1,2].map((i) => (
-                <div key={i} className="h-1.5 flex-1 rounded-full bg-current opacity-30 animate-pulse" style={{ animationDelay: `${i * 0.3}s` }} />
+                <div key={i} className="absolute inset-0 rounded-full border-2 border-brand-amber/40"
+                  style={{ animation: `ping 2.4s cubic-bezier(0,0,0.2,1) ${i * 0.8}s infinite`, transform: "scale(0)" }} />
+              ))}
+              {/* Static outer ring */}
+              <div className="absolute inset-0 rounded-full border border-white/10" />
+              <div className="absolute inset-6 rounded-full border border-white/10" />
+              <div className="absolute inset-12 rounded-full border border-white/10" />
+              {/* Radar sweep */}
+              <div className="absolute inset-0 rounded-full overflow-hidden">
+                <div className="absolute inset-0 origin-center"
+                  style={{ animation: "spin 3s linear infinite" }}>
+                  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-px h-1/2 origin-bottom"
+                    style={{ background: "linear-gradient(to top, rgba(245,158,11,0.8), transparent)" }} />
+                  <div className="absolute inset-0 origin-center rounded-full"
+                    style={{ background: "conic-gradient(from 180deg, rgba(245,158,11,0.15) 0deg, transparent 90deg)" }} />
+                </div>
+              </div>
+              {/* Center dot */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="w-3 h-3 rounded-full bg-brand-amber shadow-lg shadow-brand-amber/50 animate-pulse" />
+              </div>
+              {/* Orbiting truck icons */}
+              {[0, 120, 240].map((deg, i) => (
+                <div key={i} className="absolute inset-0"
+                  style={{ animation: `spin 8s linear ${i * -2.6}s infinite` }}>
+                  <div className="absolute top-1 left-1/2 -translate-x-1/2 text-sm opacity-60">🚛</div>
+                </div>
               ))}
             </div>
-          )}
-        </div>
+            <p className="text-white/50 text-sm text-center">Scanning for available transporters near you</p>
+            <div className="flex gap-1.5 mt-3">
+              {[0,1,2,3].map((i) => (
+                <div key={i} className="w-1.5 h-1.5 rounded-full bg-brand-amber/60"
+                  style={{ animation: `bounce 1.2s ease-in-out ${i * 0.2}s infinite` }} />
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Request details */}
         <div className="bg-white/10 rounded-xl p-5 space-y-3">

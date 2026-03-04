@@ -124,6 +124,13 @@ export async function fetchWildfires(): Promise<Incident[]> {
       if (!WESTERN_STATES.some(s => state.toLowerCase().includes(s.toLowerCase()))) continue;
       if (containmentPct === 100) continue; // fully contained — skip
 
+      // Skip fires not updated in the last 14 days — likely no longer active
+      if (updated) {
+        const updatedDate = new Date(updated);
+        const staleCutoff = new Date(now.getTime() - 14 * 24 * 60 * 60 * 1000);
+        if (!isNaN(updatedDate.getTime()) && updatedDate < staleCutoff) continue;
+      }
+
       // Calculate delta vs 24h ago
       let containmentDelta: number | null = null;
       if (incidentId && oldSnapshotMap.has(incidentId)) {

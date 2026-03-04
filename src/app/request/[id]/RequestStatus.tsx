@@ -57,46 +57,27 @@ export default function RequestStatus({ request }: { request: Request }) {
 
         {/* Radar animation for searching state */}
         {(request.status === "unmatched" || request.status === "queued") && (
-          <div className="bg-white/5 rounded-xl p-6 flex flex-col items-center">
-            <div className="relative w-48 h-48 mb-4">
-              {/* Pulsing rings */}
-              <div className="radar-ring absolute inset-0 rounded-full border-2 border-brand-amber/50" style={{ animationDelay: "0s" }} />
-              <div className="radar-ring absolute inset-0 rounded-full border-2 border-brand-amber/30" style={{ animationDelay: "0.8s" }} />
-              <div className="radar-ring absolute inset-0 rounded-full border-2 border-brand-amber/20" style={{ animationDelay: "1.6s" }} />
-              {/* Static grid rings */}
-              <div className="absolute inset-0 rounded-full border border-white/10" />
-              <div className="absolute inset-8 rounded-full border border-white/10" />
-              <div className="absolute inset-16 rounded-full border border-white/10" />
-              {/* Radar sweep */}
-              <div className="absolute inset-0 rounded-full overflow-hidden">
-                <div className="radar-sweep absolute inset-0 origin-center">
-                  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-0.5 h-1/2 origin-bottom"
-                    style={{ background: "linear-gradient(to top, rgba(245,158,11,0.9), transparent)" }} />
-                  <div className="absolute inset-0 origin-center rounded-full"
-                    style={{ background: "conic-gradient(from 270deg, rgba(245,158,11,0.12) 0deg, transparent 90deg)" }} />
-                </div>
-              </div>
-              {/* Center dot */}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-4 h-4 rounded-full bg-brand-amber animate-pulse shadow-lg" style={{ boxShadow: "0 0 12px rgba(245,158,11,0.8)" }} />
-              </div>
-              {/* Orbiting trucks */}
-              <div className="radar-orbit-1 absolute inset-0 origin-center">
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 text-base">🚛</div>
-              </div>
-              <div className="radar-orbit-2 absolute inset-0 origin-center">
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 text-base">🚛</div>
-              </div>
-              <div className="radar-orbit-3 absolute inset-0 origin-center">
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 text-base">🚛</div>
-              </div>
+          <div className="bg-white/5 rounded-xl p-6">
+            <p className="text-white/50 text-sm text-center mb-5">Finding the nearest available transporter</p>
+
+            {/* Uber-style loading track */}
+            <div className="relative h-1.5 bg-white/10 rounded-full overflow-hidden mb-3">
+              <div className="shimmer-bar absolute top-0 left-0 h-full w-1/4 rounded-full"
+                style={{ background: "linear-gradient(90deg, transparent, rgba(245,158,11,0.8), transparent)" }} />
             </div>
-            <p className="text-white/50 text-sm text-center">Scanning for available transporters near you</p>
-            <div className="flex gap-2 mt-3">
-              <div className="radar-dot w-2 h-2 rounded-full bg-brand-amber/70" style={{ animationDelay: "0s" }} />
-              <div className="radar-dot w-2 h-2 rounded-full bg-brand-amber/70" style={{ animationDelay: "0.2s" }} />
-              <div className="radar-dot w-2 h-2 rounded-full bg-brand-amber/70" style={{ animationDelay: "0.4s" }} />
-              <div className="radar-dot w-2 h-2 rounded-full bg-brand-amber/70" style={{ animationDelay: "0.6s" }} />
+
+            {/* Three status steps */}
+            <div className="flex justify-between text-xs mt-4">
+              {[
+                { label: "Request received", done: true },
+                { label: "Matching transporter", done: request.status === "queued" },
+                { label: "Transporter confirmed", done: false },
+              ].map((step, i) => (
+                <div key={i} className="flex flex-col items-center gap-1.5 flex-1">
+                  <div className={`w-2.5 h-2.5 rounded-full ${step.done ? "bg-brand-amber" : i === 1 && request.status === "unmatched" ? "bg-brand-amber animate-pulse" : "bg-white/20"}`} />
+                  <span className={`text-center leading-tight ${step.done || (i === 1) ? "text-white/70" : "text-white/25"}`}>{step.label}</span>
+                </div>
+              ))}
             </div>
           </div>
         )}

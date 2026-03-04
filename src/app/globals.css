@@ -2,33 +2,23 @@
 @tailwind components;
 @tailwind utilities;
 
-@keyframes radar-ping {
-  0%   { transform: scale(0.2); opacity: 0.8; }
-  100% { transform: scale(2.2); opacity: 0; }
+@keyframes shimmer {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(400%); }
 }
 
-@keyframes radar-sweep {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
+@keyframes truck-slide {
+  0%   { left: -8%; }
+  100% { left: 100%; }
 }
 
-@keyframes radar-bounce {
-  0%, 100% { transform: translateY(0); }
-  50%       { transform: translateY(-8px); }
+.shimmer-bar {
+  animation: shimmer 1.6s ease-in-out infinite;
 }
 
-.radar-ring {
-  animation: radar-ping 2.4s cubic-bezier(0, 0, 0.2, 1) infinite;
+.truck-slide {
+  animation: truck-slide 2.2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
-.radar-sweep {
-  animation: radar-sweep 3s linear infinite;
-}
-.radar-dot {
-  animation: radar-bounce 1.2s ease-in-out infinite;
-}
-.radar-orbit-1 { animation: radar-sweep 8s linear infinite; }
-.radar-orbit-2 { animation: radar-sweep 8s linear -2.6s infinite; }
-.radar-orbit-3 { animation: radar-sweep 8s linear -5.2s infinite; }
 
 :root {
   --background: #ffffff;

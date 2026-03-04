@@ -39,6 +39,7 @@ export default async function RootLayout({
 
           {/* Right side */}
           <div className="flex items-center gap-1">
+            <ActiveRequestBanner />
             <SupportModal />
             <Link
               href="/map"
@@ -78,7 +79,6 @@ export default async function RootLayout({
             )}
           </div>
         </nav>
-        <ActiveRequestBanner />
         {children}
       </body>
     </html>

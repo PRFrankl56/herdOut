@@ -21,9 +21,9 @@ export default async function Home() {
             className="bg-brand-amber text-brand-green font-bold text-lg px-8 py-5 rounded-xl shadow-lg hover:bg-amber-400 active:bg-amber-500 transition-colors">
             🚨 I Need Evacuation Help
           </Link>
-          <Link href="/transport"
+          <Link href="/login?callbackUrl=/transport"
             className="bg-white/10 text-white font-bold text-lg px-8 py-5 rounded-xl hover:bg-white/20 transition-colors border border-white/20">
-            🚛 I Can Transport Animals
+            🚛 Volunteer to Transport
           </Link>
         </div>
       </section>

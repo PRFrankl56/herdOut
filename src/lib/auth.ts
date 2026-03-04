@@ -31,7 +31,7 @@ export const authOptions: NextAuthOptions = {
   pages: {
     signIn: "/login",
   },
-  session: { strategy: "database" },
+  session: { strategy: "database", maxAge: 30 * 24 * 60 * 60 }, // 30 days
   callbacks: {
     session: async ({ session, user }) => {
       if (session.user) {

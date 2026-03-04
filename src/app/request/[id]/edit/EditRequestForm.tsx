@@ -30,7 +30,7 @@ export default function EditRequestForm({ request }: { request: Request }) {
   const [situation, setSituation] = useState(request.situation ?? "");
   const [evacuationScope, setEvacuationScope] = useState(request.evacuationScope);
   const [trailerType, setTrailerType] = useState(request.trailerType);
-  const [animals, setAnimals] = useState(request.animals.map((a) => ({
+  const [animals, setAnimals] = useState<{ species: string; count: number | string; specialNeeds: string }[]>(request.animals.map((a) => ({
     species: a.species, count: a.count, specialNeeds: a.specialNeeds ?? "",
   })));
 
@@ -48,7 +48,7 @@ export default function EditRequestForm({ request }: { request: Request }) {
       const res = await fetch(`/api/requests/${request.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, phone, address, situation: situation || null, evacuationScope, trailerType, animals }),
+        body: JSON.stringify({ name, phone, address, situation: situation || null, evacuationScope, trailerType, animals: animals.map((a) => ({ ...a, count: parseInt(String(a.count)) || 1 })) }),
       });
       if (!res.ok) throw new Error((await res.json()).error || "Failed");
       router.push(`/request/${request.id}`);
@@ -116,7 +116,7 @@ export default function EditRequestForm({ request }: { request: Request }) {
                     </div>
                     <div className="w-24">
                       <input type="number" min={1} value={a.count}
-                        onChange={(e) => { const u = [...animals]; u[i] = { ...u[i], count: parseInt(e.target.value) || 1 }; setAnimals(u); }}
+                        onChange={(e) => { const u = [...animals]; u[i] = { ...u[i], count: e.target.value === "" ? "" : parseInt(e.target.value) }; setAnimals(u); }}
                         className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-base focus:outline-none focus:ring-2 focus:ring-brand-green" />
                     </div>
                   </div>

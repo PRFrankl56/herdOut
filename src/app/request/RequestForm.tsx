@@ -22,7 +22,7 @@ interface SavedAnimal {
 
 interface AnimalEntry {
   species: string;
-  count: number;
+  count: number | string;
   specialNeeds: string;
 }
 
@@ -98,15 +98,20 @@ export default function RequestForm({ profile, savedAnimals }: Props) {
   }
 
   async function handleSubmit() {
-    const animalList: AnimalEntry[] = [
+    const animalList = [
       ...savedAnimals
         .filter((a) => selectedSavedIds.has(a.id))
         .map((a) => ({ species: a.species, count: 1, specialNeeds: a.specialNeeds ?? "" })),
-      ...manualAnimals,
+      ...manualAnimals.map((a) => ({ ...a, count: parseInt(String(a.count)) || 1 })),
     ];
 
     if (animalList.length === 0) {
       setError("Please select or add at least one animal.");
+      return;
+    }
+
+    if (animalList.some((a) => a.count < 1)) {
+      setError("Each animal entry must have a count of at least 1.");
       return;
     }
 
@@ -262,7 +267,7 @@ export default function RequestForm({ profile, savedAnimals }: Props) {
                   <div className="w-24">
                     <label className="block text-xs font-semibold text-gray-600 mb-1">Count</label>
                     <input type="number" min={1} value={animal.count}
-                      onChange={(e) => updateManualAnimal(i, "count", parseInt(e.target.value) || 1)}
+                      onChange={(e) => updateManualAnimal(i, "count", e.target.value === "" ? "" : parseInt(e.target.value))}
                       className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-base focus:outline-none focus:ring-2 focus:ring-brand-green" />
                   </div>
                 </div>

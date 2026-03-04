@@ -1,10 +1,22 @@
 import Link from "next/link";
 import { fetchWildfires } from "@/lib/wildfires";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
 
-export const revalidate = 300; // refresh every 5 minutes
+export const revalidate = 0;
 
 export default async function Home() {
-  const fires = await fetchWildfires();
+  const [fires, session] = await Promise.all([fetchWildfires(), getServerSession(authOptions)]);
+
+  let isTransporter = false;
+  if (session?.user?.email) {
+    const user = await prisma.user.findUnique({
+      where: { email: session.user.email },
+      include: { transporter: true },
+    });
+    isTransporter = !!user?.transporter;
+  }
 
   return (
     <main className="min-h-screen bg-brand-green">
@@ -21,10 +33,12 @@ export default async function Home() {
             className="bg-brand-amber text-brand-green font-bold text-lg px-8 py-5 rounded-xl shadow-lg hover:bg-amber-400 active:bg-amber-500 transition-colors">
             🚨 I Need Evacuation Help
           </Link>
-          <Link href="/login?callbackUrl=/transport"
-            className="bg-white/10 text-white font-bold text-lg px-8 py-5 rounded-xl hover:bg-white/20 transition-colors border border-white/20">
-            🚛 Volunteer to Transport
-          </Link>
+          {!isTransporter && (
+            <Link href="/login?callbackUrl=/transport"
+              className="bg-white/10 text-white font-bold text-lg px-8 py-5 rounded-xl hover:bg-white/20 transition-colors border border-white/20">
+              🚛 Volunteer to Transport
+            </Link>
+          )}
         </div>
       </section>
 

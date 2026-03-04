@@ -39,7 +39,7 @@ export default async function AnimalsPage() {
         ) : (
           <div className="space-y-4">
             {animals.map((animal) => (
-              <div key={animal.id} className="bg-white/10 rounded-xl overflow-hidden flex">
+              <Link key={animal.id} href={`/profile/animals/${animal.id}`} className="bg-white/10 hover:bg-white/20 transition-colors rounded-xl overflow-hidden flex">
                 {animal.photoUrl ? (
                   <img src={animal.photoUrl} alt={animal.name} className="w-24 h-24 object-cover flex-shrink-0" />
                 ) : (
@@ -47,12 +47,13 @@ export default async function AnimalsPage() {
                     {animal.species === "horse" ? "🐴" : animal.species === "cattle" ? "🐄" : "🐾"}
                   </div>
                 )}
-                <div className="p-4 flex-1">
+                <div className="p-4 flex-1 min-w-0">
                   <h3 className="text-white font-bold text-lg">{animal.name}</h3>
                   <p className="text-white/60 text-sm capitalize">{animal.species}{animal.breed ? ` · ${animal.breed}` : ""}</p>
                   {animal.specialNeeds && <p className="text-brand-amber text-xs mt-1">⚠ {animal.specialNeeds}</p>}
                 </div>
-              </div>
+                <div className="flex items-center pr-4 text-white/30">→</div>
+              </Link>
             ))}
           </div>
         )}

@@ -6,6 +6,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import NavSignOut from "./NavSignOut";
 import ActiveRequestBanner from "@/components/ActiveRequestBanner";
+import SupportModal from "@/components/SupportModal";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -38,6 +39,7 @@ export default async function RootLayout({
 
           {/* Right side */}
           <div className="flex items-center gap-1">
+            <SupportModal />
             <Link
               href="/map"
               className="flex items-center gap-1.5 text-white/60 hover:text-white hover:bg-white/10 text-sm font-medium px-3 py-2 rounded-lg transition-colors"

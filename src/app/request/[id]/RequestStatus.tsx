@@ -40,9 +40,9 @@ export default function RequestStatus({ request }: { request: Request }) {
     <main className="min-h-screen bg-brand-green px-4 py-8">
       <div className="max-w-lg mx-auto space-y-5">
         {/* Header */}
-        <div>
+        <div className="pt-2">
           <Link href="/" className="text-white/50 text-sm hover:text-white">← Home</Link>
-          <h1 className="text-3xl font-extrabold text-white mt-1">Evacuation Request</h1>
+          <h1 className="text-3xl font-extrabold text-white mt-2">Evacuation Request</h1>
           <p className="text-white/40 text-xs mt-1">Submitted {createdAt} · ID: {request.id.slice(-6).toUpperCase()}</p>
         </div>
 

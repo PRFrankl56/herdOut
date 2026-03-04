@@ -60,42 +60,43 @@ export default function RequestStatus({ request }: { request: Request }) {
           <div className="bg-white/5 rounded-xl p-6 flex flex-col items-center">
             <div className="relative w-48 h-48 mb-4">
               {/* Pulsing rings */}
-              {[0,1,2].map((i) => (
-                <div key={i} className="absolute inset-0 rounded-full border-2 border-brand-amber/40"
-                  style={{ animation: `ping 2.4s cubic-bezier(0,0,0.2,1) ${i * 0.8}s infinite`, transform: "scale(0)" }} />
-              ))}
-              {/* Static outer ring */}
+              <div className="radar-ring absolute inset-0 rounded-full border-2 border-brand-amber/50" style={{ animationDelay: "0s" }} />
+              <div className="radar-ring absolute inset-0 rounded-full border-2 border-brand-amber/30" style={{ animationDelay: "0.8s" }} />
+              <div className="radar-ring absolute inset-0 rounded-full border-2 border-brand-amber/20" style={{ animationDelay: "1.6s" }} />
+              {/* Static grid rings */}
               <div className="absolute inset-0 rounded-full border border-white/10" />
-              <div className="absolute inset-6 rounded-full border border-white/10" />
-              <div className="absolute inset-12 rounded-full border border-white/10" />
+              <div className="absolute inset-8 rounded-full border border-white/10" />
+              <div className="absolute inset-16 rounded-full border border-white/10" />
               {/* Radar sweep */}
               <div className="absolute inset-0 rounded-full overflow-hidden">
-                <div className="absolute inset-0 origin-center"
-                  style={{ animation: "spin 3s linear infinite" }}>
-                  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-px h-1/2 origin-bottom"
-                    style={{ background: "linear-gradient(to top, rgba(245,158,11,0.8), transparent)" }} />
+                <div className="radar-sweep absolute inset-0 origin-center">
+                  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-0.5 h-1/2 origin-bottom"
+                    style={{ background: "linear-gradient(to top, rgba(245,158,11,0.9), transparent)" }} />
                   <div className="absolute inset-0 origin-center rounded-full"
-                    style={{ background: "conic-gradient(from 180deg, rgba(245,158,11,0.15) 0deg, transparent 90deg)" }} />
+                    style={{ background: "conic-gradient(from 270deg, rgba(245,158,11,0.12) 0deg, transparent 90deg)" }} />
                 </div>
               </div>
               {/* Center dot */}
               <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-3 h-3 rounded-full bg-brand-amber shadow-lg shadow-brand-amber/50 animate-pulse" />
+                <div className="w-4 h-4 rounded-full bg-brand-amber animate-pulse shadow-lg" style={{ boxShadow: "0 0 12px rgba(245,158,11,0.8)" }} />
               </div>
-              {/* Orbiting truck icons */}
-              {[0, 120, 240].map((deg, i) => (
-                <div key={i} className="absolute inset-0"
-                  style={{ animation: `spin 8s linear ${i * -2.6}s infinite` }}>
-                  <div className="absolute top-1 left-1/2 -translate-x-1/2 text-sm opacity-60">🚛</div>
-                </div>
-              ))}
+              {/* Orbiting trucks */}
+              <div className="radar-orbit-1 absolute inset-0 origin-center">
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 text-base">🚛</div>
+              </div>
+              <div className="radar-orbit-2 absolute inset-0 origin-center">
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 text-base">🚛</div>
+              </div>
+              <div className="radar-orbit-3 absolute inset-0 origin-center">
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 text-base">🚛</div>
+              </div>
             </div>
             <p className="text-white/50 text-sm text-center">Scanning for available transporters near you</p>
-            <div className="flex gap-1.5 mt-3">
-              {[0,1,2,3].map((i) => (
-                <div key={i} className="w-1.5 h-1.5 rounded-full bg-brand-amber/60"
-                  style={{ animation: `bounce 1.2s ease-in-out ${i * 0.2}s infinite` }} />
-              ))}
+            <div className="flex gap-2 mt-3">
+              <div className="radar-dot w-2 h-2 rounded-full bg-brand-amber/70" style={{ animationDelay: "0s" }} />
+              <div className="radar-dot w-2 h-2 rounded-full bg-brand-amber/70" style={{ animationDelay: "0.2s" }} />
+              <div className="radar-dot w-2 h-2 rounded-full bg-brand-amber/70" style={{ animationDelay: "0.4s" }} />
+              <div className="radar-dot w-2 h-2 rounded-full bg-brand-amber/70" style={{ animationDelay: "0.6s" }} />
             </div>
           </div>
         )}

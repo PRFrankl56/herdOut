@@ -120,7 +120,8 @@ export default function RequestForm({ profile, savedAnimals }: Props) {
         body: JSON.stringify({ name, phone, address, lat, lng, situation: situation || null, evacuationScope, trailerType, animals: animalList }),
       });
       if (!res.ok) throw new Error((await res.json()).error || "Failed");
-      router.push("/request/confirmation");
+      const data = await res.json();
+      router.push(`/request/${data.id}`);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
       setSubmitting(false);

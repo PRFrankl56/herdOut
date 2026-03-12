@@ -140,7 +140,7 @@ model Transporter {
   maxDistance      String
   availableNow    Boolean
   availableInHours Int?
-  availability    String   @default("available") // available, in_progress
+  availability    String   @default("available") // available, unavailable
   notes           String?
   createdAt       DateTime @default(now())
   matches         Match[]

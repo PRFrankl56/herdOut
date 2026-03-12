@@ -52,7 +52,7 @@ export async function POST(
       // Lock transporter availability
       await prisma.transporter.update({
         where: { id: match.transporterId },
-        data: { availability: "in_progress" },
+        data: { availability: "unavailable" },
       });
 
       // Confirm the request

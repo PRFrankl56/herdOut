@@ -8,6 +8,7 @@ import NavSignOut from "./NavSignOut";
 import ActiveRequestBanner from "@/components/ActiveRequestBanner";
 import SupportModal from "@/components/SupportModal";
 import PushSubscriber from "@/components/PushSubscriber";
+import { prisma } from "@/lib/prisma";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -28,6 +29,16 @@ export default async function RootLayout({
 }>) {
   const session = await getServerSession(authOptions);
   const userInitial = session?.user?.email?.[0]?.toUpperCase() ?? null;
+
+  // Check if current user is a registered transporter
+  let isTransporter = false;
+  if (session?.user?.email) {
+    const transporterRecord = await prisma.transporter.findFirst({
+      where: { user: { email: session.user.email } },
+      select: { id: true },
+    });
+    isTransporter = !!transporterRecord;
+  }
 
   return (
     <html lang="en">
@@ -70,6 +81,14 @@ export default async function RootLayout({
                 >
                   My Animals
                 </Link>
+                {isTransporter && (
+                  <Link
+                    href="/transport/dashboard"
+                    className="text-white/60 hover:text-white hover:bg-white/10 text-sm font-medium px-3 py-2 rounded-lg transition-colors hidden sm:block"
+                  >
+                    Dashboard
+                  </Link>
+                )}
                 <Link
                   href="/profile"
                   className="flex items-center justify-center w-8 h-8 rounded-full bg-brand-amber text-brand-green font-bold text-sm ml-1 hover:bg-amber-400 transition-colors"

@@ -10,21 +10,24 @@ datasource db {
 // ── NextAuth models ──────────────────────────────────────────────
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime?
-  image         String?
-  phone         String?
-  address       String?
-  role          String    @default("owner") // owner, transporter, both
-  createdAt     DateTime  @default(now())
-  accounts      Account[]
-  sessions      Session[]
-  animals       Animal[]
+  id               String    @id @default(cuid())
+  name             String?
+  email            String?   @unique
+  emailVerified    DateTime?
+  image            String?
+  phone            String?
+  address          String?
+  password         String?
+  resetToken       String?   @unique
+  resetTokenExpiry DateTime?
+  role             String    @default("owner") // owner, transporter, both
+  createdAt        DateTime  @default(now())
+  accounts         Account[]
+  sessions         Session[]
+  animals          Animal[]
   transporterProfile TransporterProfile?
-  transporter   Transporter?
-  requests      Request[]
+  transporter      Transporter?
+  requests         Request[]
   pushSubscriptions PushSubscription[]
 }
 
